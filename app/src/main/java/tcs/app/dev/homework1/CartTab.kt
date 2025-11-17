@@ -32,6 +32,7 @@ import tcs.app.dev.homework1.data.Item
 import tcs.app.dev.homework1.data.MockData
 import tcs.app.dev.homework1.data.times
 
+//component for cart: rendering all items then all discounts
 @Composable
 fun CartTabContent(
     cart: Cart,

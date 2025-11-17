@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import tcs.app.dev.homework1.data.Euro
 
+//component rendering "shop"+"discounts" in shop
 @Composable
 fun ShopBottomBar(selected: ShopTab, onSelect: (ShopTab) -> Unit) {
     NavigationBar {
@@ -34,6 +35,7 @@ fun ShopBottomBar(selected: ShopTab, onSelect: (ShopTab) -> Unit) {
     }
 }
 
+//component rendering "total price" + "pay"
 @Composable
 fun CartBottomBar(totalPrice: Euro, canPay: Boolean, onPay: () -> Unit) {
     BottomAppBar {

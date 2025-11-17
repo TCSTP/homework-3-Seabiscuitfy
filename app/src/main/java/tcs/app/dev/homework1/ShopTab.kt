@@ -22,10 +22,13 @@ import tcs.app.dev.homework1.data.Cart
 import tcs.app.dev.homework1.data.Item
 import tcs.app.dev.homework1.data.MockData
 
+//Component rendering shop items under Shoptab, one row for each item consisting of 1.image 2.Name+price 3.+ button
 @Composable
 fun ShopTabContent(items: List<Item>, cart: Cart, onAdd: (Item) -> Unit) {
     LazyColumn {
-        items(items, key = { it.hashCode() }) { item ->
+        items(items, key = { it.hashCode() })
+        //one row for each item
+        { item ->
             ShopItemRow(item = item, onAdd = { onAdd(item) })
         }
     }
@@ -39,16 +42,20 @@ fun ShopItemRow(item: Item, onAdd: () -> Unit) {
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+
+        //image
         Image(
             painter = painterResource(MockData.getImage(item)),
             contentDescription = stringResource(MockData.getName(item)),
             modifier = Modifier.size(64.dp)
         )
         Spacer(Modifier.width(16.dp))
+
+        //name+price
         Column(Modifier.weight(1f)) {
             Text(stringResource(MockData.getName(item)))
             Text(MockData.ExampleShop.prices[item].toString())
         }
-        Button(onClick = onAdd) { Text("+") }
+        Button(onClick = onAdd) { Text("Add to cart") }
     }
 }

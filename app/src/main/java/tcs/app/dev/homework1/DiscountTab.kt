@@ -25,6 +25,7 @@ import tcs.app.dev.homework1.data.Cart
 import tcs.app.dev.homework1.data.Discount
 import tcs.app.dev.homework1.data.MockData
 
+//component for discounts tab
 @Composable
 fun DiscountTabContent(discounts: List<Discount>, cart: Cart, onAdd: (Discount) -> Unit) {
     LazyColumn {
@@ -35,6 +36,7 @@ fun DiscountTabContent(discounts: List<Discount>, cart: Cart, onAdd: (Discount) 
     }
 }
 
+//each discount type has 1.image 2.description 3.+ button
 @Composable
 fun DiscountRow(discount: Discount, added: Boolean, onAdd: () -> Unit) {
     Row(
