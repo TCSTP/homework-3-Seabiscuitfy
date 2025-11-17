@@ -1,14 +1,12 @@
 package tcs.app.dev.homework1
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import tcs.app.dev.homework1.data.Cart
-import tcs.app.dev.homework1.data.Discount
-import tcs.app.dev.homework1.data.Shop
+import tcs.app.dev.homework1.data.*
+
 
 /**
  * # Homework 3 — Shop App
@@ -92,12 +90,71 @@ import tcs.app.dev.homework1.data.Shop
  * - [Pager](https://developer.android.com/develop/ui/compose/layouts/pager)
  *
  */
+
+
+enum class ShopTab { SHOP, DISCOUNTS, CART }
+
 @Composable
 fun ShopScreen(
     shop: Shop,
     availableDiscounts: List<Discount>,
     modifier: Modifier = Modifier
 ) {
-    var cart by rememberSaveable { mutableStateOf(Cart(shop = shop)) }
+    var selectedTab by rememberSaveable { mutableStateOf(ShopTab.SHOP) }
+    var cart by rememberSaveable { mutableStateOf(Cart(shop)) }
 
+    Scaffold(
+        topBar = {
+            ShopTopBar(
+                selectedTab = selectedTab,
+                cart = cart,
+                onCartClick = { if (cart.totalCount > 0u) selectedTab = ShopTab.CART },
+                onBack = { selectedTab = ShopTab.SHOP }
+            )
+        },
+        bottomBar = {
+            if (selectedTab == ShopTab.CART) {
+                CartBottomBar(
+                    totalPrice = cart.price,
+                    canPay = cart.itemCount > 0u,
+                    onPay = {
+                        cart = Cart(shop) // clear cart
+                        selectedTab = ShopTab.SHOP
+                    }
+                )
+            } else {
+                ShopBottomBar(
+                    selected = selectedTab,
+                    onSelect = { selectedTab = it }
+                )
+            }
+        }
+    ) { padding ->
+        Box(modifier = Modifier.padding(padding)) {
+            when (selectedTab) {
+                ShopTab.SHOP -> ShopTabContent(
+                    items = shop.prices.keys.toList(),
+                    cart = cart,
+                    onAdd = { amount, item ->
+                        cart = cart + (item to amount)
+                        selectedTab = ShopTab.CART // Redirect to cart
+                    }
+                )
+                ShopTab.DISCOUNTS -> DiscountTabContent(
+                    discounts = availableDiscounts,
+                    cart = cart,
+                    onAdd = { cart = cart + it }
+                )
+                ShopTab.CART -> CartTabContent(
+                    cart = cart,
+                    onInc = { cart = cart + it },
+                    onDec = { cart = cart - it },
+                    onRemoveDiscount = { cart = cart - it }
+                )
+            }
+        }
+    }
 }
+
+
+
