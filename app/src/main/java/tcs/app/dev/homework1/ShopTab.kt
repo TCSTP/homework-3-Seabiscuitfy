@@ -11,9 +11,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,18 +34,18 @@ import tcs.app.dev.homework1.data.MockData
 
 //Component rendering shop items under Shoptab, one row for each item consisting of 1.image 2.Name+price 3.+ button
 @Composable
-fun ShopTabContent(items: List<Item>, cart: Cart, onAdd: (Item) -> Unit) {
+fun ShopTabContent(items: List<Item>, cart: Cart, onAdd: (UInt,Item) -> Unit) {
     LazyColumn {
         items(items, key = { it.hashCode() })
         //one row for each item
         { item ->
-            ShopItemRow(item = item, onAdd = { onAdd(item) })
+            ShopItemRow(item = item, onAdd = onAdd )
         }
     }
 }
 
 @Composable
-fun ShopItemRow(item: Item, onAdd: () -> Unit) {
+fun ShopItemRow(item: Item, onAdd: (UInt, Item) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -71,6 +74,13 @@ fun ShopItemRow(item: Item, onAdd: () -> Unit) {
         Box {
             Button(onClick = { expanded = true }) {
                 Text(selectedAmount.toString())
+                Spacer(Modifier.width(4.dp))
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = "select quantity",
+                    modifier = Modifier.size(20.dp)
+                )
+
             }
             DropdownMenu(
                 expanded = expanded,
@@ -90,6 +100,6 @@ fun ShopItemRow(item: Item, onAdd: () -> Unit) {
 
 
         Spacer(Modifier.width(8.dp))
-        Button(onClick = onAdd) { Text("Add to cart") }
+        Button(onClick = {onAdd(selectedAmount,item)}) { Text("Add to cart") }
     }
 }

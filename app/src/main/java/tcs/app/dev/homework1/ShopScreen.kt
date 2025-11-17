@@ -135,7 +135,10 @@ fun ShopScreen(
                 ShopTab.SHOP -> ShopTabContent(
                     items = shop.prices.keys.toList(),
                     cart = cart,
-                    onAdd = { cart = cart + it }
+                    onAdd = { amount, item ->
+                        cart = cart + (item to amount)
+                        selectedTab = ShopTab.CART // Redirect to cart
+                    }
                 )
                 ShopTab.DISCOUNTS -> DiscountTabContent(
                     discounts = availableDiscounts,
