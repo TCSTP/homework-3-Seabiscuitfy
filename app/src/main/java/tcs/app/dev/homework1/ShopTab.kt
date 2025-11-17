@@ -1,6 +1,7 @@
 package tcs.app.dev.homework1
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,8 +12,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -43,6 +50,9 @@ fun ShopItemRow(item: Item, onAdd: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
 
+        var expanded by remember { mutableStateOf(false) }
+        var selectedAmount by remember { mutableStateOf(1u) }
+
         //image
         Image(
             painter = painterResource(MockData.getImage(item)),
@@ -56,6 +66,30 @@ fun ShopItemRow(item: Item, onAdd: () -> Unit) {
             Text(stringResource(MockData.getName(item)))
             Text(MockData.ExampleShop.prices[item].toString())
         }
+
+        // select quantity with dropdown menu
+        Box {
+            Button(onClick = { expanded = true }) {
+                Text(selectedAmount.toString())
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                (1..10).forEach { amount ->
+                    DropdownMenuItem(
+                        text = { Text(amount.toString()) },
+                        onClick = {
+                            selectedAmount = amount.toUInt()
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+
+
+        Spacer(Modifier.width(8.dp))
         Button(onClick = onAdd) { Text("Add to cart") }
     }
 }
